@@ -63,7 +63,6 @@ struct ConsoleAPICall {
 
 fn main() {
     println!("Hello");
-    // TODO How to get the port for the devtools listener
     let mut stream = TcpStream::connect("127.0.0.1:6000").unwrap();
 
     'outer: loop {

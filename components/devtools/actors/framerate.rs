@@ -10,8 +10,9 @@ use time::precise_time_ns;
 
 use actor::{Actor, ActorRegistry, ActorMessageStatus};
 use actors::timeline::HighResolutionStamp;
-use devtools_traits::DevtoolScriptControlMsg;
 use msg::constellation_msg::PipelineId;
+use devtools_traits::{ChromeToDevtoolsControlMsg, DevtoolsControlMsg, DevtoolScriptControlMsg};
+use devtools_msg::{HighResolutionStamp};
 
 pub struct FramerateActor {
     name: String,

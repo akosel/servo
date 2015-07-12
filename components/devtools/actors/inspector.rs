@@ -8,6 +8,7 @@
 use devtools_traits::DevtoolScriptControlMsg::{GetLayout, ModifyAttribute};
 use devtools_traits::DevtoolScriptControlMsg::{GetRootNode, GetDocumentElement, GetChildren};
 use devtools_traits::{DevtoolScriptControlMsg, NodeInfo, ComputedNodeLayout};
+use devtools_msg::{GetHighlighterReply, HighlighterMsg, ShowBoxModelReply, HideBoxModelReply};
 
 use actor::{Actor, ActorRegistry, ActorMessageStatus};
 use protocol::JsonPacketStream;
@@ -29,17 +30,6 @@ pub struct InspectorActor {
     pub pipeline: PipelineId,
 }
 
-#[derive(RustcEncodable)]
-struct GetHighlighterReply {
-    highligter: HighlighterMsg, // sic.
-    from: String,
-}
-
-#[derive(RustcEncodable)]
-struct HighlighterMsg {
-    actor: String,
-}
-
 struct HighlighterActor {
     name: String,
 }
@@ -48,16 +38,6 @@ pub struct NodeActor {
     pub name: String,
     script_chan: IpcSender<DevtoolScriptControlMsg>,
     pipeline: PipelineId,
-}
-
-#[derive(RustcEncodable)]
-struct ShowBoxModelReply {
-    from: String,
-}
-
-#[derive(RustcEncodable)]
-struct HideBoxModelReply {
-    from: String,
 }
 
 impl Actor for HighlighterActor {

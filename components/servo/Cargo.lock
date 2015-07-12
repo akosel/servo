@@ -288,6 +288,7 @@ dependencies = [
 name = "devtools"
 version = "0.0.1"
 dependencies = [
+ "devtools_msg 0.0.1",
  "devtools_traits 0.0.1",
  "hyper 0.6.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "ipc-channel 0.1.0 (git+https://github.com/pcwalton/ipc-channel)",
@@ -298,6 +299,20 @@ dependencies = [
  "serde_macros 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "url 0.2.36 (registry+https://github.com/rust-lang/crates.io-index)",
+ "util 0.0.1",
+]
+
+[[package]]
+name = "devtools_msg"
+version = "0.0.1"
+dependencies = [
+ "bitflags 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "devtools_traits 0.0.1",
+ "hyper 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "msg 0.0.1",
+ "rustc-serialize 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.26 (registry+https://github.com/rust-lang/crates.io-index)",
+ "url 0.2.35 (registry+https://github.com/rust-lang/crates.io-index)",
  "util 0.0.1",
 ]
 

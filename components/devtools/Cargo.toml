@@ -14,6 +14,9 @@ features = [ "serde-serialization" ]
 [dependencies.devtools_traits]
 path = "../devtools_traits"
 
+[dependencies.devtools_msg]
+path = "../devtools_msg"
+
 [dependencies.msg]
 path = "../msg"
 

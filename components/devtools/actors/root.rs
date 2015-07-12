@@ -14,33 +14,7 @@ use protocol::JsonPacketStream;
 use rustc_serialize::json;
 use std::net::TcpStream;
 
-#[derive(RustcEncodable)]
-struct ActorTraits {
-    sources: bool,
-    highlightable: bool,
-    customHighlighters: Vec<String>,
-}
-
-#[derive(RustcEncodable)]
-struct ErrorReply {
-    from: String,
-    error: String,
-    message: String,
-}
-
-#[derive(RustcEncodable)]
-struct ListTabsReply {
-    from: String,
-    selected: u32,
-    tabs: Vec<TabActorMsg>,
-}
-
-#[derive(RustcEncodable)]
-struct RootActorMsg {
-    from: String,
-    applicationType: String,
-    traits: ActorTraits,
-}
+use devtools_msg::{ActorTraits, ErrorReply, ListTabsReply, RootActorMsg};
 
 pub struct RootActor {
     pub tabs: Vec<String>,

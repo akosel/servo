@@ -16,6 +16,10 @@ use protocol::JsonPacketStream;
 use rustc_serialize::json;
 use std::net::TcpStream;
 use url::Url;
+use hyper::header::Headers;
+use hyper::http::RawStatus;
+use hyper::method::Method;
+use devtools_msg::{ResponseStartMsg, GetRequestHeadersReply};
 
 struct HttpRequest {
     url: String,
@@ -30,12 +34,6 @@ struct HttpResponse {
     body: Option<Vec<u8>>
 }
 
-pub struct NetworkEventActor {
-    pub name: String,
-    request: HttpRequest,
-    response: HttpResponse,
-}
-
 #[derive(RustcEncodable)]
 pub struct EventActor {
     pub actor: String,
@@ -46,23 +44,10 @@ pub struct EventActor {
     pub private: bool
 }
 
-#[derive(RustcEncodable)]
-pub struct ResponseStartMsg {
-    pub httpVersion: String,
-    pub remoteAddress: String,
-    pub remotePort: u32,
-    pub status: String,
-    pub statusText: String,
-    pub headersSize: u32,
-    pub discardResponseBody: bool,
-}
-
-#[derive(RustcEncodable)]
-struct GetRequestHeadersReply {
-    from: String,
-    headers: Vec<String>,
-    headerSize: u8,
-    rawHeaders: String
+pub struct NetworkEventActor {
+    pub name: String,
+    request: HttpRequest,
+    response: HttpResponse,
 }
 
 impl Actor for NetworkEventActor {

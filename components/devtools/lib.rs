@@ -27,6 +27,7 @@ extern crate log;
 
 extern crate core;
 extern crate devtools_traits;
+extern crate devtools_msg;
 extern crate rustc_serialize;
 extern crate ipc_channel;
 extern crate serde;
@@ -49,6 +50,7 @@ use actors::timeline::TimelineActor;
 use actors::worker::WorkerActor;
 use protocol::JsonPacketStream;
 
+use devtools_msg::{ResponseStartMsg};
 use devtools_traits::{ChromeToDevtoolsControlMsg, ConsoleMessage, DevtoolsControlMsg};
 use devtools_traits::{DevtoolsPageInfo, DevtoolScriptControlMsg, LogLevel, NetworkEvent};
 use devtools_traits::{ScriptToDevtoolsControlMsg};
@@ -84,6 +86,7 @@ mod actors {
 }
 mod protocol;
 
+// XXX to devtools_msg
 #[derive(RustcEncodable)]
 struct ConsoleAPICall {
     from: String,
@@ -115,6 +118,7 @@ struct NetworkEventUpdateMsg {
     updateType: String,
     response: ResponseStartMsg,
 }
+// XXX
 
 /// Spin up a devtools server that listens for connections on the specified port.
 pub fn start_server(port: u16) -> Sender<DevtoolsControlMsg> {

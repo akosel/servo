@@ -5,20 +5,8 @@
 use rustc_serialize::json;
 use std::net::TcpStream;
 
-use actor::{Actor, ActorRegistry, ActorMessageStatus};
-
-#[derive(RustcEncodable)]
-pub struct TimelineMemoryReply {
-    jsObjectSize: u64,
-    jsStringSize: u64,
-    jsOtherSize: u64,
-    domSize: u64,
-    styleSize: u64,
-    otherSize: u64,
-    totalSize: u64,
-    jsMilliseconds: f64,
-    nonJSMilliseconds: f64,
-}
+use actor::{Actor, ActorRegistry};
+use devtools_msg::{TimelineMemoryReply};
 
 pub struct MemoryActor {
     pub name: String,

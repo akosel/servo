@@ -15,6 +15,8 @@ use devtools_traits::CachedConsoleMessage;
 use devtools_traits::EvaluateJSReply::{NullValue, VoidValue, NumberValue};
 use devtools_traits::EvaluateJSReply::{StringValue, BooleanValue, ActorValue};
 use devtools_traits::{CachedConsoleMessageTypes, DevtoolScriptControlMsg, PAGE_ERROR, CONSOLE_API};
+use devtools_traits::CachedConsoleMessage;
+use devtools_msg::{StartedListenersTraits, StartedListenersReply, GetCachedMessagesReply, AutocompleteReply, EvaluateJSReply, StopListenersReply};
 use msg::constellation_msg::PipelineId;
 
 use core::cell::RefCell;
@@ -35,49 +37,6 @@ impl EncodableConsoleMessage for CachedConsoleMessage {
             CachedConsoleMessage::ConsoleAPI(ref a) => json::encode(a),
         }
     }
-}
-
-#[derive(RustcEncodable)]
-struct StartedListenersTraits {
-    customNetworkRequest: bool,
-}
-
-#[derive(RustcEncodable)]
-struct StartedListenersReply {
-    from: String,
-    nativeConsoleAPI: bool,
-    startedListeners: Vec<String>,
-    traits: StartedListenersTraits,
-}
-
-#[derive(RustcEncodable)]
-struct GetCachedMessagesReply {
-    from: String,
-    messages: Vec<json::Object>,
-}
-
-#[derive(RustcEncodable)]
-struct StopListenersReply {
-    from: String,
-    stoppedListeners: Vec<String>,
-}
-
-#[derive(RustcEncodable)]
-struct AutocompleteReply {
-    from: String,
-    matches: Vec<String>,
-    matchProp: String,
-}
-
-#[derive(RustcEncodable)]
-struct EvaluateJSReply {
-    from: String,
-    input: String,
-    result: Json,
-    timestamp: u64,
-    exception: Json,
-    exceptionMessage: String,
-    helperResult: Json,
 }
 
 pub struct ConsoleActor {

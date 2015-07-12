@@ -4,7 +4,7 @@
 
 use ipc_channel::ipc::{self, IpcReceiver, IpcSender};
 use msg::constellation_msg::PipelineId;
-use rustc_serialize::{json, Encoder, Encodable};
+use rustc_serialize::{json};
 use std::cell::RefCell;
 use std::collections::{HashMap, VecDeque};
 use std::mem;
@@ -19,6 +19,7 @@ use actors::memory::{MemoryActor, TimelineMemoryReply};
 use devtools_traits::DevtoolScriptControlMsg;
 use devtools_traits::DevtoolScriptControlMsg::{SetTimelineMarkers, DropTimelineMarkers};
 use devtools_traits::{PreciseTime, TimelineMarker, TracingMetadata, TimelineMarkerType};
+use devtools_msg::{IsRecordingReply, StartReply, StopReply, TimelineMarkerReply, MarkersEmitterReply, MemoryEmitterReply, FramerateEmitterReply, HighResolutionStamp};
 use protocol::JsonPacketStream;
 use util::task;
 
@@ -45,80 +46,29 @@ struct Emitter {
     memory_actor: Option<String>,
 }
 
-#[derive(RustcEncodable)]
-struct IsRecordingReply {
-    from: String,
-    value: bool
-}
-
-#[derive(RustcEncodable)]
-struct StartReply {
-    from: String,
-    value: HighResolutionStamp,
-}
-
-#[derive(RustcEncodable)]
-struct StopReply {
-    from: String,
-    value: HighResolutionStamp,
-}
-
-#[derive(RustcEncodable)]
-struct TimelineMarkerReply {
-    name: String,
-    start: HighResolutionStamp,
-    end: HighResolutionStamp,
-    stack: Option<Vec<()>>,
-    endStack: Option<Vec<()>>,
-}
-
-#[derive(RustcEncodable)]
-struct MarkersEmitterReply {
-    __type__: String,
-    markers: Vec<TimelineMarkerReply>,
-    from: String,
-    endTime: HighResolutionStamp,
-}
-
-#[derive(RustcEncodable)]
-struct MemoryEmitterReply {
-    __type__: String,
-    from: String,
-    delta: HighResolutionStamp,
-    measurement: TimelineMemoryReply,
-}
-
-#[derive(RustcEncodable)]
-struct FramerateEmitterReply {
-    __type__: String,
-    from: String,
-    delta: HighResolutionStamp,
-    timestamps: Vec<HighResolutionStamp>,
-}
-
 /// HighResolutionStamp is struct that contains duration in milliseconds
 /// with accuracy to microsecond that shows how much time has passed since
 /// actor registry inited
 /// analog https://w3c.github.io/hr-time/#sec-DOMHighResTimeStamp
-pub struct HighResolutionStamp(f64);
-
-impl HighResolutionStamp {
-    pub fn new(start_stamp: PreciseTime, time: PreciseTime) -> HighResolutionStamp {
-        let duration = start_stamp.to(time).num_microseconds()
-                                  .expect("Too big duration in microseconds");
-        HighResolutionStamp(duration as f64 / 1000 as f64)
-    }
-
-    pub fn wrap(time: f64) -> HighResolutionStamp {
-        HighResolutionStamp(time)
-    }
-}
-
-impl Encodable for HighResolutionStamp {
-    fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
-        self.0.encode(s)
-    }
-}
+//pub struct HighResolutionStamp(f64);
+//
+//impl HighResolutionStamp {
+//    pub fn new(start_stamp: PreciseTime, time: PreciseTime) -> HighResolutionStamp {
+//        let duration = start_stamp.to(time).num_microseconds()
+//                                  .expect("Too big duration in microseconds");
+//        HighResolutionStamp(duration as f64 / 1000 as f64)
+//    }
+//
+//    pub fn wrap(time: f64) -> HighResolutionStamp {
+//        HighResolutionStamp(time)
+//    }
+//}
+//
+//impl Encodable for HighResolutionStamp {
+//    fn encode<S: Encoder>(&self, s: &mut S) -> Result<(), S::Error> {
+//        self.0.encode(s)
+//    }
+//}
 
 static DEFAULT_TIMELINE_DATA_PULL_TIMEOUT: u32 = 200; //ms
 

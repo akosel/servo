@@ -10,40 +10,12 @@
 use actor::{Actor, ActorRegistry, ActorMessageStatus};
 use actors::console::ConsoleActor;
 use devtools_traits::DevtoolScriptControlMsg::WantsLiveNotifications;
+use devtools_msg::{TabTraits, TabAttachedReply, TabDetachedReply, ReconfigureReply, ListFramesReply, TabActorMsg};
 use protocol::JsonPacketStream;
 
 use rustc_serialize::json;
 use std::net::TcpStream;
 
-#[derive(RustcEncodable)]
-struct TabTraits;
-
-#[derive(RustcEncodable)]
-struct TabAttachedReply {
-    from: String,
-    __type__: String,
-    threadActor: String,
-    cacheDisabled: bool,
-    javascriptEnabled: bool,
-    traits: TabTraits,
-}
-
-#[derive(RustcEncodable)]
-struct TabDetachedReply {
-    from: String,
-    __type__: String,
-}
-
-#[derive(RustcEncodable)]
-struct ReconfigureReply {
-    from: String
-}
-
-#[derive(RustcEncodable)]
-struct ListFramesReply {
-    from: String,
-    frames: Vec<FrameMsg>,
-}
 
 #[derive(RustcEncodable)]
 struct FrameMsg {
@@ -51,19 +23,6 @@ struct FrameMsg {
     url: String,
     title: String,
     parentID: u32,
-}
-
-#[derive(RustcEncodable)]
-pub struct TabActorMsg {
-    actor: String,
-    title: String,
-    url: String,
-    outerWindowID: u32,
-    consoleActor: String,
-    inspectorActor: String,
-    timelineActor: String,
-    profilerActor: String,
-    performanceActor: String,
 }
 
 pub struct TabActor {
