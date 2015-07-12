@@ -10,7 +10,6 @@
 
 #![allow(non_snake_case)]
 
-extern crate devtools_traits;
 extern crate rustc_serialize;
 extern crate time;
 
@@ -18,6 +17,41 @@ use rustc_serialize::{Encodable, Encoder};
 use rustc_serialize::json::{self, Json};
 
 use time::PreciseTime;
+
+pub mod protocol;
+
+/// Devtools Messages
+#[derive(RustcEncodable)]
+pub struct ClientAPICall {
+    pub to: String,
+    pub __type__: String,
+    pub message: ConsoleMsg,
+}
+
+#[derive(RustcEncodable)]
+pub struct ConsoleAPICall {
+    pub from: String,
+    pub __type__: String,
+    pub message: ConsoleMsg,
+}
+
+#[derive(RustcEncodable)]
+pub struct ConsoleMsg {
+    pub level: String,
+    pub timeStamp: u64,
+    pub arguments: Vec<String>,
+    pub filename: String,
+    pub lineNumber: u32,
+    pub columnNumber: u32,
+}
+
+#[derive(RustcEncodable)]
+pub struct NetworkEventUpdateMsg {
+    pub from: String,
+    pub __type__: String,
+    pub updateType: String,
+    pub response: ResponseStartMsg,
+}
 
 /// Console Actor messages
 #[derive(RustcEncodable)]
@@ -63,7 +97,7 @@ pub struct EvaluateJSReply {
     pub helperResult: Json,
 }
 
-/// Inspector Actor Messages 
+/// Inspector Actor Messages
 #[derive(RustcEncodable)]
 pub struct GetHighlighterReply {
     pub highligter: HighlighterMsg, // sic.
@@ -85,7 +119,7 @@ pub struct HideBoxModelReply {
     pub from: String,
 }
 
-/// Memory Actor Messages 
+/// Memory Actor Messages
 #[derive(RustcEncodable)]
 pub struct TimelineMemoryReply {
     pub jsObjectSize: u64,
@@ -99,7 +133,7 @@ pub struct TimelineMemoryReply {
     pub nonJSMilliseconds: f64,
 }
 
-/// Network Event Actor Messages 
+/// Network Event Actor Messages
 #[derive(RustcEncodable)]
 pub struct ResponseStartMsg {
     pub httpVersion: String,
@@ -148,7 +182,7 @@ pub struct RootActorMsg {
     pub traits: ActorTraits,
 }
 
-/// Tab Actor Messages 
+/// Tab Actor Messages
 #[derive(RustcEncodable)]
 pub struct TabTraits;
 
@@ -199,7 +233,7 @@ pub struct TabActorMsg {
 }
 
 /// Timeline Actor Messages
-/// XXX Included HighResolutionStamp because it used by several messages, but I feel that 
+/// XXX Included HighResolutionStamp because it used by several messages, but I feel that
 /// may not be the best way
 /// HighResolutionStamp is pub struct that contains duration in milliseconds
 /// with accuracy to microsecond that shows how much time has passed since

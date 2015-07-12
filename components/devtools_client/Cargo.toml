@@ -16,7 +16,10 @@ test = false
 doc = false
 bench = false
 
+[dependencies.devtools_msg]
+path = "../devtools_msg"
+
 [dependencies]
-url = "0.2.35"
-time = "0.1.12"
+time = "*"
 rustc-serialize = "0.3"
+url = "*"

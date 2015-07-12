@@ -11,7 +11,6 @@ use rustc_serialize::json::Json;
 use std::io::{self, Read, Write};
 use std::net::TcpStream;
 
-// XXX from devtools::protocol to protocol.rs
 pub trait JsonPacketStream {
     fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T);
     fn read_json_packet(&mut self) -> io::Result<Option<Json>>;

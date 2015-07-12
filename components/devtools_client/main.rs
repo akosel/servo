@@ -6,64 +6,22 @@
 //! [glutin]: https://github.com/tomaka/glutin
 
 extern crate rustc_serialize;
+extern crate devtools_msg;
+extern crate time;
 
-use rustc_serialize::{json, Encodable};
-use rustc_serialize::json::Json;
-use std::io::{self, Read, Write, stdin, stdout};
-use std::net::TcpStream;
+use std::io::{self, Write, stdin, stdout};
+use std::net::{TcpStream, Shutdown};
 use std::error::Error;
 
-#[derive(RustcEncodable)]
-struct ConsoleAPICall {
-    from: String,
-    to: String,
-    __type__: String,
-    text: String,
-}
+use devtools_msg::{ClientAPICall, ConsoleAPICall, ConsoleMsg};
+use devtools_msg::protocol::JsonPacketStream;
 
-pub trait JsonPacketStream {
-    fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T);
-    fn read_json_packet(&mut self) -> io::Result<Option<Json>>;
-}
-
-impl JsonPacketStream for TcpStream {
-    fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T) {
-        let s = json::encode(obj).unwrap().replace("__type__", "type");
-        println!("<- {}", s);
-        self.write_all(s.len().to_string().as_bytes()).unwrap();
-        self.write_all(&[':' as u8]).unwrap();
-        self.write_all(s.as_bytes()).unwrap();
-    }
-
-    fn read_json_packet<'a>(&mut self) -> io::Result<Option<Json>> {
-        // https://wiki.mozilla.org/Remote_Debugging_Protocol_Stream_Transport
-        // In short, each JSON packet is [ascii length]:[JSON data of given length]
-        let mut buffer = vec!();
-        loop {
-            let mut buf = [0];
-            let byte = match try!(self.read(&mut buf)) {
-                0 => return Ok(None),  // EOF
-                1 => buf[0],
-                _ => unreachable!(),
-            };
-            match byte {
-                b':' => {
-                    let packet_len_str = String::from_utf8(buffer).unwrap();
-                    let packet_len = u64::from_str_radix(&packet_len_str, 10).unwrap();
-                    let mut packet = String::new();
-                    self.take(packet_len).read_to_string(&mut packet).unwrap();
-                    println!("{}", packet);
-                    return Ok(Some(Json::from_str(&packet).unwrap()))
-                },
-                c => buffer.push(c),
-            }
-        }
-    }
-}
+use time::precise_time_ns;
 
 fn main() {
     println!("Hello");
-    let mut stream = TcpStream::connect("127.0.0.1:6000").unwrap();
+    let port: u16 = 6000;
+    let mut stream = TcpStream::connect(&("127.0.0.1", port)).unwrap();
 
     'outer: loop {
         match stream.read_json_packet() {
@@ -81,14 +39,14 @@ fn main() {
             }
         }
 
-        print!(">>>");
-        io::stdout().flush().unwrap();
-        let mut message = String::new();
-        io::stdin().read_line(&mut message)
-            .ok()
-            .expect("Failed to read line");
+        //print!(">>>");
+        //io::stdout().flush().unwrap();
+        //let mut message = String::new();
+        //io::stdin().read_line(&mut message)
+        //    .ok()
+        //    .expect("Failed to read line");
 
-        println!("Message {}", message);
+        //println!("Message {}", message);
 
         //let msg = ConsoleAPICall {
         //    from: "test".to_string(),
@@ -102,12 +60,21 @@ fn main() {
         // { to: "root".to_string(), __type__: "listTabs".to_string() }
         // 2. Attach to a tab (based on above response, presumably)
         // { to: "tabN".to_string(), __type__: "attach".to_string() }
-        let msg = ConsoleAPICall {
-            from: "test".to_string(),
-            to: "console2".to_string(),
-            __type__: "evaluateJS".to_string(),
-            text: message.trim_right_matches('\n').to_string(),
+        let console_msg = ConsoleMsg {
+            level: "info".to_string(),
+            timeStamp: precise_time_ns(),
+            arguments: vec!("foo".to_string()),
+            filename: "test".to_string(),
+            lineNumber: 10,
+            columnNumber: 2
+        };
+        let msg = ClientAPICall {
+            to: "root".to_string(),
+            __type__: "listTabs".to_string(),
+            message: console_msg,
         };
         stream.write_json_packet(&msg);
+        let _ = stream.shutdown(Shutdown::Both);
+        break 'outer;
     }
 }

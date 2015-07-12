@@ -50,7 +50,7 @@ use actors::timeline::TimelineActor;
 use actors::worker::WorkerActor;
 use protocol::JsonPacketStream;
 
-use devtools_msg::{ResponseStartMsg};
+use devtools_msg::{ConsoleAPICall, ConsoleMsg, NetworkEventUpdateMsg};
 use devtools_traits::{ChromeToDevtoolsControlMsg, ConsoleMessage, DevtoolsControlMsg};
 use devtools_traits::{DevtoolsPageInfo, DevtoolScriptControlMsg, LogLevel, NetworkEvent};
 use devtools_traits::{ScriptToDevtoolsControlMsg};
@@ -86,37 +86,12 @@ mod actors {
 }
 mod protocol;
 
-// XXX to devtools_msg
-#[derive(RustcEncodable)]
-struct ConsoleAPICall {
-    from: String,
-    __type__: String,
-    message: ConsoleMsg,
-}
-
-#[derive(RustcEncodable)]
-struct ConsoleMsg {
-    level: String,
-    timeStamp: u64,
-    arguments: Vec<String>,
-    filename: String,
-    lineNumber: u32,
-    columnNumber: u32,
-}
-
+// XXX To devtools_msg, but need to figure out best way to reference EventActor
 #[derive(RustcEncodable)]
 struct NetworkEventMsg {
     from: String,
     __type__: String,
     eventActor: EventActor,
-}
-
-#[derive(RustcEncodable)]
-struct NetworkEventUpdateMsg {
-    from: String,
-    __type__: String,
-    updateType: String,
-    response: ResponseStartMsg,
 }
 // XXX
 

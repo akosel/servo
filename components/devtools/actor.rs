@@ -198,6 +198,9 @@ impl ActorRegistry {
                           -> Result<(), ()> {
         let to = msg.get("to").unwrap().as_string().unwrap();
 
+        for (key, value) in &self.actors {
+            println!("Actor {:?}", key);
+        }
         match self.actors.get(&to.to_string()) {
             None => println!("message received for unknown actor \"{}\"", to),
             Some(actor) => {
