@@ -16,10 +16,7 @@ test = false
 doc = false
 bench = false
 
-# Not sure about the dependencies
 [dependencies]
 url = "0.2.35"
 time = "0.1.12"
-bitflags = "*"
-libc = "*"
 rustc-serialize = "0.3"

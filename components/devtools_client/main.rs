@@ -13,6 +13,14 @@ use std::io::{self, Read, Write, stdin, stdout};
 use std::net::TcpStream;
 use std::error::Error;
 
+#[derive(RustcEncodable)]
+struct ConsoleAPICall {
+    from: String,
+    to: String,
+    __type__: String,
+    text: String,
+}
+
 pub trait JsonPacketStream {
     fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T);
     fn read_json_packet(&mut self) -> io::Result<Option<Json>>;
@@ -44,21 +52,13 @@ impl JsonPacketStream for TcpStream {
                     let packet_len = u64::from_str_radix(&packet_len_str, 10).unwrap();
                     let mut packet = String::new();
                     self.take(packet_len).read_to_string(&mut packet).unwrap();
-                    println!("reading packet {}", packet);
+                    println!("{}", packet);
                     return Ok(Some(Json::from_str(&packet).unwrap()))
                 },
                 c => buffer.push(c),
             }
         }
     }
-}
-
-#[derive(RustcEncodable)]
-struct ConsoleAPICall {
-    from: String,
-    to: String,
-    __type__: String,
-    text: String,
 }
 
 fn main() {
