@@ -1,0 +1,25 @@
+[package]
+
+name = "devtools_client"
+version = "0.0.1"
+authors = ["The Servo Project Developers"]
+
+[lib]
+name = "devtools_client"
+path = "lib.rs"
+crate-type = ["rlib"]
+
+[[bin]]
+name = "devtools_client"
+path = "main.rs"
+test = false
+doc = false
+bench = false
+
+# Not sure about the dependencies
+[dependencies]
+url = "0.2.35"
+time = "0.1.12"
+bitflags = "*"
+libc = "*"
+rustc-serialize = "0.3"
