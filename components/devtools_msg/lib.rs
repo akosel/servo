@@ -135,6 +135,16 @@ pub struct TimelineMemoryReply {
 
 /// Network Event Actor Messages
 #[derive(RustcEncodable)]
+pub struct EventActor {
+    pub actor: String,
+    pub url: String,
+    pub method: String,
+    pub startedDateTime: String,
+    pub isXHR: bool,
+    pub private: bool
+}
+
+#[derive(RustcEncodable)]
 pub struct ResponseStartMsg {
     pub httpVersion: String,
     pub remoteAddress: String,

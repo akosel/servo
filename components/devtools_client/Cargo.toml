@@ -9,13 +9,6 @@ name = "devtools_client"
 path = "lib.rs"
 crate-type = ["rlib"]
 
-[[bin]]
-name = "devtools_client"
-path = "main.rs"
-test = false
-doc = false
-bench = false
-
 [dependencies.devtools_msg]
 path = "../devtools_msg"
 

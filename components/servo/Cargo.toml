@@ -36,6 +36,11 @@ name = "reftest"
 path = "../../tests/reftest.rs"
 harness = false
 
+[[test]]
+name = "devtools_test"
+path = "../../tests/devtools/harness.rs"
+harness = true
+
 [dependencies.png]
 git = "https://github.com/servo/rust-png"
 features = [ "serde-serialization" ]

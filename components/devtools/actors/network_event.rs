@@ -19,7 +19,7 @@ use url::Url;
 use hyper::header::Headers;
 use hyper::http::RawStatus;
 use hyper::method::Method;
-use devtools_msg::{ResponseStartMsg, GetRequestHeadersReply};
+use devtools_msg::{ResponseStartMsg, GetRequestHeadersReply, EventActor};
 
 struct HttpRequest {
     url: String,
@@ -32,16 +32,6 @@ struct HttpResponse {
     headers: Option<Headers>,
     status: Option<RawStatus>,
     body: Option<Vec<u8>>
-}
-
-#[derive(RustcEncodable)]
-pub struct EventActor {
-    pub actor: String,
-    pub url: String,
-    pub method: String,
-    pub startedDateTime: String,
-    pub isXHR: bool,
-    pub private: bool
 }
 
 pub struct NetworkEventActor {
