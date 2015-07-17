@@ -1,18 +1,20 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-extern crate devtools;
 extern crate util;
 extern crate servo;
 extern crate compositing;
+extern crate devtools;
+extern crate devtools_client;
 // The window backed by glutin
 extern crate glutin_app as app;
 
 use util::opts;
 use servo::Browser;
 use compositing::windowing::WindowEvent;
+use devtools_client::run_client;
 
-fn main() {
+fn run_servo() {
     let port: u16 = 6000;
     let mut opts = opts::default_opts();
     opts.headless = true;
@@ -66,4 +68,11 @@ impl app::NestedEventLoopListener for BrowserWrapper {
         }
         true
     }
+}
+
+#[test]
+fn it_works() {
+    run_servo();
+    run_client();
+    assert!(true, true);
 }
