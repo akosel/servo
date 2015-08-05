@@ -11,12 +11,11 @@
 #![allow(non_snake_case)]
 
 extern crate rustc_serialize;
-extern crate time;
+extern crate devtools_traits;
 
 use rustc_serialize::{Encodable, Encoder};
 use rustc_serialize::json::{self, Json};
-
-use time::PreciseTime;
+use devtools_traits::{PreciseTime};
 
 pub mod protocol;
 

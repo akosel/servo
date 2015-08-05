@@ -30,6 +30,7 @@ impl JsonPacketStream for TcpStream {
         // In short, each JSON packet is [ascii length]:[JSON data of given length]
         let mut buffer = vec!();
         loop {
+            println!("In read_json_packet");
             let mut buf = [0];
             let byte = match try!(self.read(&mut buf)) {
                 0 => return Ok(None),  // EOF

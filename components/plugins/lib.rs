@@ -56,7 +56,7 @@ pub fn plugin_registrar(reg: &mut Registry) {
     reg.register_lint_pass(box lints::privatize::PrivatizePass as LintPassObject);
     reg.register_lint_pass(box lints::inheritance_integrity::InheritancePass as LintPassObject);
     reg.register_lint_pass(box lints::ban::BanPass as LintPassObject);
-    reg.register_lint_pass(box tenacious::TenaciousPass as LintPassObject);
+    //reg.register_lint_pass(box tenacious::TenaciousPass as LintPassObject);
     reg.register_attribute("must_root".to_string(), Whitelisted);
     reg.register_attribute("servo_lang".to_string(), Whitelisted);
     reg.register_attribute("allow_unrooted_interior".to_string(), Whitelisted);

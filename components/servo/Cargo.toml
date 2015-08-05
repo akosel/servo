@@ -38,7 +38,7 @@ harness = false
 
 [[test]]
 name = "devtools_test"
-path = "../../tests/devtools/harness.rs"
+path = "../../tests/devtools/tests.rs"
 harness = true
 
 [dependencies.png]
@@ -96,6 +96,9 @@ path = "../webdriver_server"
 
 [dependencies.devtools_traits]
 path = "../devtools_traits"
+
+[dependencies.devtools_client]
+path = "../devtools_client"
 
 [dependencies.glutin_app]
 path = "../../ports/glutin"

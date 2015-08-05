@@ -21,12 +21,29 @@ use devtools_msg::protocol::JsonPacketStream;
 
 use time::precise_time_ns;
 
-fn run_client() {
-    println!("Hello");
+pub fn run_client() {
+    println!("Hello from devtools");
     let port: u16 = 6000;
     let mut stream = TcpStream::connect(&("127.0.0.1", port)).unwrap();
+    println!("Connected");
 
     'outer: loop {
+        println!("In loop");
+        let console_msg = ConsoleMsg {
+            level: "info".to_string(),
+            timeStamp: precise_time_ns(),
+            arguments: vec!("foo".to_string()),
+            filename: "test".to_string(),
+            lineNumber: 10,
+            columnNumber: 2
+        };
+        let msg = ClientAPICall {
+            to: "root".to_string(),
+            __type__: "listTabs".to_string(),
+            message: console_msg,
+        };
+        stream.write_json_packet(&msg);
+        println!("Further down the loop too");
         match stream.read_json_packet() {
             Ok(Some(json_packet)) => {
 
@@ -42,7 +59,9 @@ fn run_client() {
             }
         }
 
-        //print!(">>>");
+        let _ = stream.shutdown(Shutdown::Both);
+        break 'outer;
+        print!(">>>");
         //io::stdout().flush().unwrap();
         //let mut message = String::new();
         //io::stdin().read_line(&mut message)
@@ -63,21 +82,5 @@ fn run_client() {
         // { to: "root".to_string(), __type__: "listTabs".to_string() }
         // 2. Attach to a tab (based on above response, presumably)
         // { to: "tabN".to_string(), __type__: "attach".to_string() }
-        let console_msg = ConsoleMsg {
-            level: "info".to_string(),
-            timeStamp: precise_time_ns(),
-            arguments: vec!("foo".to_string()),
-            filename: "test".to_string(),
-            lineNumber: 10,
-            columnNumber: 2
-        };
-        let msg = ClientAPICall {
-            to: "root".to_string(),
-            __type__: "listTabs".to_string(),
-            message: console_msg,
-        };
-        stream.write_json_packet(&msg);
-        let _ = stream.shutdown(Shutdown::Both);
-        break 'outer;
     }
 }

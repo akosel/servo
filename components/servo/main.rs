@@ -46,6 +46,7 @@ use std::borrow::ToOwned;
 
 fn main() {
     env_logger::init().unwrap();
+    println!("Starting servo");
 
     // Parse the command line options and store them globally
     opts::from_cmdline_args(&*get_args());
@@ -79,6 +80,7 @@ fn main() {
             Some(ref window) => browser.browser.handle_events(window.wait_events()),
         };
         if !should_continue {
+            println!("Not continuing");
             break
         }
     };

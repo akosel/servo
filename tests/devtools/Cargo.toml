@@ -8,11 +8,6 @@ name = "devtools_tests"
 path = "lib.rs"
 doctest = false
 
-[features]
-default = ["glutin_app", "window"]
-window = ["glutin_app/window"]
-headless = ["glutin_app/headless"]
-
 [dependencies.devtools]
 path = "../../../components/devtools"
 
@@ -22,18 +17,11 @@ path = "../../../components/devtools_traits"
 [dependencies.devtools_msg]
 path = "../../../components/devtools_msg"
 
-[dependencies.servo]
-path = "../../../components/servo"
+[dependencies.devtools_client]
+path = "../../../components/devtools_client"
 
 [dependencies.util]
 path = "../../../components/util"
-
-[dependencies.util]
-path = "../../../components/compositing"
-
-[dependencies.glutin_app]
-path = "../../ports/glutin"
-optional = true
 
 [dependencies]
 url = "*"
