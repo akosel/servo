@@ -7,9 +7,11 @@
 //! (https://wiki.mozilla.org/Remote_Debugging_Protocol_Stream_Transport#JSON_Packets).
 
 use rustc_serialize::{json, Encodable};
-use rustc_serialize::json::Json;
+use rustc_serialize::json::{Json, EncodeResult, Encoder, encode};
 use std::io::{self, Read, Write};
 use std::net::TcpStream;
+
+use std::string;
 
 pub trait JsonPacketStream {
     fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T);
@@ -17,8 +19,9 @@ pub trait JsonPacketStream {
 }
 
 impl JsonPacketStream for TcpStream {
+
     fn write_json_packet<'a, T: Encodable>(&mut self, obj: &T) {
-        let s = json::encode(obj).unwrap().replace("__type__", "type");
+        let s = encode(obj).unwrap().replace("__type__", "type");
         println!("<- {}", s);
         self.write_all(s.len().to_string().as_bytes()).unwrap();
         self.write_all(&[':' as u8]).unwrap();
@@ -30,7 +33,6 @@ impl JsonPacketStream for TcpStream {
         // In short, each JSON packet is [ascii length]:[JSON data of given length]
         let mut buffer = vec!();
         loop {
-            println!("In read_json_packet");
             let mut buf = [0];
             let byte = match try!(self.read(&mut buf)) {
                 0 => return Ok(None),  // EOF

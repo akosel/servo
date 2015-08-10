@@ -144,6 +144,13 @@ pub struct EventActor {
 }
 
 #[derive(RustcEncodable)]
+pub struct NetworkEventMsg {
+    pub from: String,
+    pub __type__: String,
+    pub eventActor: EventActor,
+}
+
+#[derive(RustcEncodable)]
 pub struct ResponseStartMsg {
     pub httpVersion: String,
     pub remoteAddress: String,

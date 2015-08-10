@@ -91,6 +91,9 @@ path = "../gfx"
 [dependencies.devtools]
 path = "../devtools"
 
+[dependencies.devtools_msg]
+path = "../devtools_msg"
+
 [dependencies.webdriver_server]
 path = "../webdriver_server"
 

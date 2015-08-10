@@ -86,15 +86,6 @@ mod actors {
 }
 mod protocol;
 
-// XXX To devtools_msg, but need to figure out best way to reference EventActor
-#[derive(RustcEncodable)]
-struct NetworkEventMsg {
-    from: String,
-    __type__: String,
-    eventActor: EventActor,
-}
-// XXX
-
 /// Spin up a devtools server that listens for connections on the specified port.
 pub fn start_server(port: u16) -> Sender<DevtoolsControlMsg> {
     let (sender, receiver) = channel();

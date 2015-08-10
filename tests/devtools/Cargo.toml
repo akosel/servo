@@ -8,6 +8,9 @@ name = "devtools_tests"
 path = "lib.rs"
 doctest = false
 
+[dependencies.servo]
+path = "../../../components/servo"
+
 [dependencies.devtools]
 path = "../../../components/devtools"
 
