@@ -46,7 +46,7 @@ pub fn start_client() -> TcpStream {
         let sender = sender.clone();
         thread::spawn(move || {
             println!("Start client");
-            thread::sleep_ms(2000);
+            thread::sleep_ms(1000);
             run_client(sender);
             println!("Done with client");
         });

@@ -207,6 +207,28 @@ class MachCommands(CommandBase):
         if error:
             return 1
 
+    @Command('test-devtools',
+             description='Run the devtools tests',
+             category='testing')
+    @CommandArgument('--name', default=None,
+                     help="Only run tests that match this pattern. If the "
+                          "path to the ref test directory is included, it "
+                          "will automatically be trimmed out.")
+    def test_devtools(self, name=None):
+        self.ensure_bootstrapped()
+        self.ensure_built_tests()
+        error = False
+
+        test_start = time()
+        ret = self.run_test("devtools_test")
+        error = error or ret != 0
+        elapsed = time() - test_start
+
+        print("Devtools tests completed in %0.2fs" % elapsed)
+
+        if error:
+            return 1
+
     @Command('test-content',
              description='Run the content tests',
              category='testing')
