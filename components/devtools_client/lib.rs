@@ -12,11 +12,10 @@ extern crate devtools_msg;
 extern crate devtools_traits;
 extern crate time;
 
-use std::io::{self, Write, stdin, stdout};
 use std::net::{TcpStream, Shutdown};
 use std::error::Error;
 use std::thread;
-use std::sync::mpsc::{channel, Receiver, Sender, RecvError};
+use std::sync::mpsc::{channel, Sender};
 
 use devtools_msg::{ClientAPICall, ConsoleAPICall, ConsoleMsg};
 use devtools_msg::protocol::JsonPacketStream;
@@ -40,15 +39,15 @@ pub fn send_msg(mut stream: TcpStream) {
     stream.write_json_packet(&msg);
 }
 
-pub fn start_client() -> TcpStream {
+pub fn start_client(server_killer: Sender<Result<i32, i32>>) -> TcpStream {
     let (sender, receiver) = channel();
     {
         let sender = sender.clone();
         thread::spawn(move || {
             println!("Start client");
-            thread::sleep_ms(1000);
             run_client(sender);
             println!("Done with client");
+            server_killer.send(Ok(1));
         });
     }
     loop {
@@ -66,13 +65,17 @@ pub fn start_client() -> TcpStream {
 fn run_client(sender: Sender<TcpStream>) {
     println!("Hello from devtools");
     let port: u16 = 6000;
-    let mut stream = TcpStream::connect(&("127.0.0.1", port)).unwrap();
-    println!("Connected at {:?}", stream.peer_addr().unwrap());
-    sender.send(stream.try_clone().unwrap());
+    let mut stream = TcpStream::connect(&("127.0.0.1", port));
+    while stream.is_err() {
+        stream = TcpStream::connect(&("127.0.0.1", port));
+    }
+    let mut stream_unwrap = stream.unwrap();
+    println!("Connected at {:?}", stream_unwrap.peer_addr().unwrap());
+    let _result = sender.send(stream_unwrap.try_clone().unwrap());
 
     'outer: loop {
         println!("In loop");
-        match stream.read_json_packet() {
+        match stream_unwrap.read_json_packet() {
             Ok(Some(json_packet)) => {
 
                 println!("client received json obj {}", json_packet);
@@ -86,6 +89,7 @@ fn run_client(sender: Sender<TcpStream>) {
                 break 'outer
             }
         }
+        stream_unwrap.shutdown(Shutdown::Both);
         println!("Further down the loop too");
         //io::stdout().flush().unwrap();
         //let mut message = String::new();

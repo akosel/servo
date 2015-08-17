@@ -14,12 +14,14 @@ fn servo_path() -> PathBuf {
 }
 
 pub fn start_servo() -> Child {
-    let servo_args = ["https://rust-lang.com", "--devtools", "--headless"];
+    let servo_args = ["https://google.com", "--devtools", "--headless"];
     println!("Servo args {:?}", servo_args);
-    let child = Command::new(&servo_path())
+    let mut child = Command::new(&servo_path())
                                 .args(&servo_args)
                                 .spawn() 
                                 .unwrap_or_else(|e| { panic!("failed to execute child: {}", e) });
 
+    //let mut ecode = child.wait()
+    //     .unwrap_or_else(|e| { panic!("failed to wait on child: {}", e) });
     child
 }
